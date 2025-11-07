@@ -33,12 +33,24 @@ export const isAuthenticated = async (req, resizeBy, next) => {
         message: "User not found",
       });
     }
+    req.user = user
     req.id = user._id;
     next();
   } catch (error) {
     return res.status(400).json({
       success: false,
       message: error.message,
+    });
+  }
+};
+
+export const isAdmin = async (req, res, next) => {
+  if (req.user && req.user.role === "admin") {
+    next();
+  } else {
+    return res.status(403).json({
+      success: false,
+      message: "Access denied: admin only",
     });
   }
 };

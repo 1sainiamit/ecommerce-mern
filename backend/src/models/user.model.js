@@ -16,7 +16,7 @@ const userSchema = new Schema(
     token: { type: String, default: null },
     isVerified: { type: Boolean, default: null },
     isLoggedIn: { type: Boolean, default: false },
-    otp: { type: Boolean, default: null },
+    otp: { type: String, default: null },
     otpExpiry: { type: Date, default: null },
     city: { type: String },
     zipCode: { type: String },
