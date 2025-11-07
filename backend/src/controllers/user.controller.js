@@ -8,7 +8,7 @@ import sendOTPMail from "../config/sendOTPMail.js";
 
 export const register = async (req, res) => {
   const { firstName, lastName, email, password } = req.body;
-  if (!firstName || !lastName || !email || !password) {
+  if (!firstName || !email || !password) {
     res
       .status(400)
       .json({ success: false, message: "All fields are required" });
