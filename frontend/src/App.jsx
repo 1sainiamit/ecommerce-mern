@@ -5,6 +5,7 @@ import LoginPage from "./pages/login";
 import HomePage from "./pages";
 import DashboardPage from "./components/Dashboard";
 import VerifyEmailSent from "./pages/verifyEmail";
+import ProfilePage from "./pages/profile";
 
 const App = () => {
   return (
@@ -13,7 +14,8 @@ const App = () => {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/verify" element={<VerifyEmailSent />} />
       <Route path="/" element={<DashboardPage />}>
-        <Route element={<HomePage />} />
+        <Route path="/" element={<HomePage />} />
+        <Route path="/profile" element={<ProfilePage />} />
       </Route>
     </Routes>
   );
