@@ -79,6 +79,7 @@ export function LoginForm({ className, ...props }) {
                   id="email"
                   name="email"
                   type="email"
+                  autoComplete
                   placeholder="m@example.com"
                   value={formData.email}
                   onChange={handleChange}
@@ -93,6 +94,7 @@ export function LoginForm({ className, ...props }) {
                     type={showPassword ? "text" : "password"}
                     value={formData.password}
                     onChange={handleChange}
+                    autoComplete
                     required
                   />
                   <button

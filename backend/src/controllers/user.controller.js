@@ -361,3 +361,82 @@ export const getUserById = async (req, res) => {
     });
   }
 };
+
+export const updateUserById = async (req, res) => {
+  try {
+    const userIdToUpdate = req.params.id;
+    const loggedInUser = req.user;
+    const {
+      firstName,
+      lastName,
+      email,
+      address,
+      city,
+      zipCode,
+      phoneNo,
+      role,
+    } = req.body;
+    if (
+      loggedInUser._id.toString() !== userIdToUpdate &&
+      loggedInUser.role !== "admin"
+    ) {
+      return res.status(403).json({
+        success: false,
+        message: "You are not allowed to update this profile!",
+      });
+    }
+
+    const user = await User.findById(userIdToUpdate);
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    let profilePicUrl = user.profilePic;
+    let profilePicPublicId = user.profilePicPublicId;
+
+    if (req.file) {
+      if (profilePicPublicId) {
+        await cloudinary.uploader.destroy(profilePicPublicId);
+      }
+
+      const uploadResult = await new Promise((resolve, request) => {
+        const stream = cloudinary.uploader.update_stream(
+          {
+            folder: "profiles",
+          },
+          (error, result) => {
+            if (error) reject(error);
+            else resolve(result);
+          }
+        );
+        stream.end(req.file.buffer);
+      });
+      profilePicUrl = uploadResult.secure_url;
+      profilePicPublicId = uploadResult.public_id;
+    }
+    user.firstName = firstName || user.firstName;
+    user.lastName = lastName || user.lastName;
+    user.email = email || user.email;
+    user.city = city || user.city;
+    user.zipCode = zipCode || user.zipCode;
+    user.phoneNo = phoneNo || user.phoneNo;
+    user.role = role;
+    user.profilePic = profilePicUrl;
+    user.profilePicPublicId = profilePicPublicId;
+
+    const updatedUser = await user.save();
+    return res.status(200).json({
+      success: true,
+      message: "Profile updated successfully",
+      updatedUser,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};

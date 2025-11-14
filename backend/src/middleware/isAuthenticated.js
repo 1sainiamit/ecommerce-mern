@@ -1,7 +1,7 @@
 import { User } from "../models/user.model.js";
 import jwt from "jsonwebtoken";
 
-export const isAuthenticated = async (req, resizeBy, next) => {
+export const isAuthenticated = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -33,7 +33,7 @@ export const isAuthenticated = async (req, resizeBy, next) => {
         message: "User not found",
       });
     }
-    req.user = user
+    req.user = user;
     req.id = user._id;
     next();
   } catch (error) {

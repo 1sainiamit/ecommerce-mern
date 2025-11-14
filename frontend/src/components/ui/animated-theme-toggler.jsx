@@ -3,18 +3,22 @@ import { Moon, Sun } from "lucide-react";
 import { flushSync } from "react-dom";
 
 import { cn } from "@/lib/utils";
+import { useTheme } from "../ThemeProvider";
 
 export const AnimatedThemeToggler = ({
   className,
   duration = 400,
   ...props
 }) => {
+  const { setTheme } = useTheme();
   const [isDark, setIsDark] = useState(false);
   const buttonRef = useRef(null);
 
   useEffect(() => {
     const updateTheme = () => {
-      setIsDark(document.documentElement.classList.contains("dark"));
+      const isCurrentlyDark =
+        document.documentElement.classList.contains("dark");
+      setIsDark(isCurrentlyDark);
     };
 
     updateTheme();
@@ -33,10 +37,8 @@ export const AnimatedThemeToggler = ({
 
     await document.startViewTransition(() => {
       flushSync(() => {
-        const newTheme = !isDark;
-        setIsDark(newTheme);
-        document.documentElement.classList.toggle("dark");
-        localStorage.setItem("theme", newTheme ? "dark" : "light");
+        const newTheme = isDark ? "light" : "dark";
+        setTheme(newTheme);
       });
     }).ready;
 
@@ -62,7 +64,7 @@ export const AnimatedThemeToggler = ({
         pseudoElement: "::view-transition-new(root)",
       }
     );
-  }, [isDark, duration]);
+  }, [isDark, duration, setTheme]);
 
   return (
     <button

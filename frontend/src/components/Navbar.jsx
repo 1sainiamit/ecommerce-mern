@@ -26,7 +26,8 @@ export const Navbar = () => {
         }
       );
       if (res.data.success) {
-        dispatch(setUser(null))
+        dispatch(setUser(null));
+        localStorage.removeItem("accessToken");
         toast.success(res.data.message);
       }
     } catch (error) {
@@ -39,7 +40,7 @@ export const Navbar = () => {
   };
 
   return (
-    <header className="sticky z-50">
+    <header className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60 border-b">
       <div className="mx-auto w-full flex items-center justify-between py-2 px-2">
         <NavLink to="/">
           <h1 className="scroll-m-20 text-center text-2xl font-extrabold tracking-tight text-balance">
